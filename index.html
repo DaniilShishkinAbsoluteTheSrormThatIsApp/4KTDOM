@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSSКТ4DOM</title>
+<style>
+    .slider {
+        position: relative;
+        width: 300px;
+        height: 20px;
+        background-color: #ccc;
+    }
+
+    .thumb {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: #333;
+        cursor: pointer;
+    }
+
+    .value-display {
+        margin-top: -30px;
+        font-size: 16px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="slider">
+    <div class="thumb"></div>
+</div>
+<div class="value-display">0</div>
+
+<script>
+    const slider = document.querySelector('.slider');
+    const thumb = document.querySelector('.thumb');
+    const valueDisplay = document.querySelector('.value-display');
+
+    const sliderWidth = slider.offsetWidth;
+    const thumbWidth = thumb.offsetWidth;
+
+    const minValue = 0;
+    const maxValue = sliderWidth - thumbWidth;
+
+    let isDragging = false;
+
+    thumb.addEventListener('mousedown', (event) => {
+        isDragging = true;
+        const startX = event.clientX - thumb.offsetLeft;
+
+        document.addEventListener('mousemove', moveThumb);
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.removeEventListener('mousemove', moveThumb);
+        });
+
+        function moveThumb(event) {
+            if (isDragging) {
+                let newPosition = event.clientX - startX;
+                if (newPosition < minValue) {
+                    newPosition = minValue;
+                } else if (newPosition > maxValue) {
+                    newPosition = maxValue;
+                }
+                thumb.style.left = newPosition + 'px';
+
+                const value = Math.round((newPosition / maxValue) * 100);
+                valueDisplay.textContent = value;
+            }
+        }
+    });
+
+    thumb.style.left = '0px';
+</script>
+</body>
+</html>
